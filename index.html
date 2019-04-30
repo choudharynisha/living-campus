@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang = "en-US">
 <head>
 	<title>Living Campus</title>
 	 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css"
@@ -16,7 +16,7 @@
  <script src="https://cdn.jsdelivr.net/npm/leaflet-search@2.9.8/dist/leaflet-search.src.min.js"></script>
    <style type="text/css">
    		#livingcampus {
-   			height: 1000px;
+   			height: 750px;
    		}
    		.tooltip-img {
 		  max-width: 200px;
@@ -44,37 +44,59 @@
 
 		var mymap = L.map('livingcampus').setView([40.027, -75.315], 16);
 		L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
-    	attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+    	attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a><br/>Project contributors: Nisha Choudhary, Andrew Tharler, Alicia Peaker, Cara Navarro, and Lille van der Zanden',
     	maxZoom: 20,
     	id: 'mapbox.streets',
     	accessToken: 'pk.eyJ1IjoiYXBlYWtlciIsImEiOiJjamxxdDBzYXoyam52M3B0NXJzazZ3b3Y2In0.0Pd_m3s30duVpgLPy4foqA'
 		}).addTo(mymap);
 
 		var objIcon = L.icon({
-				iconUrl: 'lantern_0.jpg',
+				iconUrl: 'Lantern B.png',
 				iconSize:     [30, 30], // size of the icon
 	    		iconAnchor:   [15, 0], // point of the icon which will correspond to marker's location
 	    		popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
 			});
 
 		var treeIcon = L.icon({
-				iconUrl: 'tree_icon.png',
+				iconUrl: 'Tree C.png',
 				iconSize: [30, 30],
 				iconAnchor: [15, 15],
 				popupAnchor: [0, 0]
 			});
 
 		var donatedObjectsLayer = L.geoJSON(donations.responseJSON, {
-			filter: function(feature, layer)
-			{
+			filter: function(feature, layer) {
 				if (feature.properties.icon == "object"){
 					return feature.properties.icon;
 				}
 			},
 			onEachFeature: function(feature, layer){
 				var p = layer.feature.properties;
-				p.index = p.item + " | " + p.donor_id + " | " + p.dedi_id + " | " + p.inscription;
-				layer.bindPopup('<img class ="tooltip-img" src = "/images/' + feature.properties.img_src + '" >' + '<h1>Dedicated to '+feature.properties.dedi_id+'</h1><h2>Given by ' + feature.properties.donor_id+'</h2>'  + feature.geometry.coordinates),
+                p.index = p.item;
+                
+                // if there is a donor_id, add it; otherwise, don't
+                if(p.donor_id != '') {
+                    p.index += " | " + p.donor_id;
+                }
+                
+                // if there is a dedi_id, add it; otherwise, don't
+                if(p.dedi_id != '') {
+                    p.index += " | " + p.dedi_id;
+                }
+                
+                // if there is an inscription, add it; otherwise, don't
+                if(p.inscription != '') {
+                    " | " + p.inscription;
+                }
+                
+				//only try to display image if there's an image source
+				if (p.img_src != ''){
+					var img = '<img class ="tooltip-img" src = "images/' + p.img_src + '" >'
+				} else img = '<img style="display:none">';
+                
+			
+				
+				layer.bindPopup(img + '<h1>' + feature.properties.item + '</h1> <h2>Dedicated to '+feature.properties.dedi_id+'</h2><h2>Given by ' + feature.properties.donor_id+'</h2>'  + feature.geometry.coordinates),
 				layer.setIcon(objIcon)
 			}
 
@@ -89,7 +111,11 @@
 				onEachFeature: function(feature, layer) {
 					var q = layer.feature.properties;
 					q.index = q.item + " | " + q.donor_id + " | " + q.dedi_id + " | " + q.inscription;
-						layer.bindPopup('<img class ="tooltip-img" src = "/images/' + feature.properties.img_src + '" ><h1>' + feature.properties.item +  '</h1><h2>Dedicated to ' + feature.properties.dedi_id + '</h2><h2>Given by ' + feature.properties.donor_id + '</h2>'),
+					//only try to display image if there's an image source
+					if (q.img_src != ''){
+						var img = '<img class ="tooltip-img" src = "images/' + q.img_src + '" >'
+					} else img = '<img style="display:none">';
+					layer.bindPopup(img + '<h1>' + feature.properties.item +  '</h1><h2>Dedicated to ' + feature.properties.dedi_id + '</h2><h2>Given by ' + feature.properties.donor_id + '</h2>'),
 								layer.setIcon(treeIcon)
 				}
 		}).addTo(mymap);
@@ -105,7 +131,8 @@
 			.addLayer(donatedTreesLayer)
 			.addLayer(donatedObjectsLayer)
 			.addTo(mymap);
-
+            
+        //mymap.addControl(L.control.addAttribution());
 
 		var controlSearch = new L.Control.Search({
 		    position:'topleft',    // where do you want the search bar?
