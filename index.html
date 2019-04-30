@@ -73,7 +73,7 @@
 			onEachFeature: function(feature, layer){
 				var p = layer.feature.properties;
                 p.index = p.item;
-                
+                /*
                 // if there is a donor_id, add it; otherwise, don't
                 if(p.donor_id != '') {
                     p.index += " | " + p.donor_id;
@@ -87,17 +87,44 @@
                 // if there is an inscription, add it; otherwise, don't
                 if(p.inscription != '') {
                     " | " + p.inscription;
-                }
+                }*/
                 
 				//only try to display image if there's an image source
 				if (p.img_src != ''){
 					var img = '<img class ="tooltip-img" src = "images/' + p.img_src + '" >'
 				} else img = '<img style="display:none">';
                 
-			
+                if(p.donor_id != '') { // if there is a donor_id
+                    if(p.dedi_id != '') { // if there is a dedi_id
+                        if(p.inscription != '') { // if there is an inscription
+                            layer.bindPopup(img + '<h1>' + feature.properties.item + '</h1> <h2>Dedicated to '+feature.properties.dedi_id+'</h2><h2>Given by ' + feature.properties.donor_id+'</h2>' /* + inscription??? */  + feature.geometry.coordinates),
+				            layer.setIcon(objIcon)
+                        } else {
+                            layer.bindPopup(img + '<h1>' + feature.properties.item + '</h1> <h2>Dedicated to '+feature.properties.dedi_id+'</h2><h2>Given by ' + feature.properties.donor_id+'</h2>'  + feature.geometry.coordinates),
+				            layer.setIcon(objIcon)
+                        }
+                    } else if(p.inscription != '') { // donor and inscription but no dedication
+                        layer.bindPopup(img + '<h1>' + feature.properties.item + '</h1> <h2>Given by ' + feature.properties.donor_id+'</h2>' /* + inscription??? */  + feature.geometry.coordinates),
+                        layer.setIcon(objIcon)
+                    }
+                } else if(p.dedi_id != '') { // dedication but no donor
+                    if(p.inscription != '') { // dedication & inscription
+                        layer.bindPopup(img + '<h1>' + feature.properties.item + '</h1> <h2>Dedicated to '+feature.properties.dedi_id+'</h2>' /* + inscription??? */  + feature.geometry.coordinates),
+                        layer.setIcon(objIcon)
+                    } else { // dedication only
+                        layer.bindPopup(img + '<h1>' + feature.properties.item + '</h1> <h2>Dedicated to '+feature.properties.dedi_id+'</h2>' + feature.geometry.coordinates),
+                        layer.setIcon(objIcon)
+                    }
+                } else if(p.inscription != '') { // inscription only
+                    layer.bindPopup(img + '<h1>' + feature.properties.item + '</h1>' /* + inscription??? */  + feature.geometry.coordinates),
+                    layer.setIcon(objIcon)
+                } else { // none of the above
+                    layer.bindPopup(img + '<h1>' + feature.properties.item + '</h1>'),
+                    layer.setIcon(objIcon)
+                }
 				
-				layer.bindPopup(img + '<h1>' + feature.properties.item + '</h1> <h2>Dedicated to '+feature.properties.dedi_id+'</h2><h2>Given by ' + feature.properties.donor_id+'</h2>'  + feature.geometry.coordinates),
-				layer.setIcon(objIcon)
+				//layer.bindPopup(img + '<h1>' + feature.properties.item + '</h1> <h2>Dedicated to '+feature.properties.dedi_id+'</h2><h2>Given by ' + feature.properties.donor_id+'</h2>'  + feature.geometry.coordinates),
+				//layer.setIcon(objIcon)
 			}
 
 		}).addTo(mymap);
