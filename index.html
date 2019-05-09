@@ -94,32 +94,35 @@
 					var img = '<img class ="tooltip-img" src = "images/' + p.img_src + '" >'
 				} else img = '<img style="display:none">';
                 
-                if(p.donor_id != '') { // if there is a donor_id
-                    if(p.dedi_id != '') { // if there is a dedi_id
-                        if(p.inscription != '') { // if there is an inscription
-                            layer.bindPopup(img + '<h1>' + feature.properties.item + '</h1> <h2>Dedicated to '+feature.properties.dedi_id+'</h2><h2>Given by ' + feature.properties.donor_id+'</h2>' /* + inscription??? */  + feature.geometry.coordinates),
+                if(p.donor_id != '') {
+                    if(p.dedi_id != '') {
+                        if(p.inscription != '') { // donor, dedication, and inscription
+                            layer.bindPopup(img + '<h1>' + feature.properties.item + '</h1><h2>Dedicated to '+feature.properties.dedi_id+'</h2><h2>Given by ' + feature.properties.donor_id+'</h2><br /><h3><em>Inscription:</em></h3>' + p.inscription + '<br />' + feature.geometry.coordinates),
 				            layer.setIcon(objIcon)
-                        } else {
-                            layer.bindPopup(img + '<h1>' + feature.properties.item + '</h1> <h2>Dedicated to '+feature.properties.dedi_id+'</h2><h2>Given by ' + feature.properties.donor_id+'</h2>'  + feature.geometry.coordinates),
+                        } else { // donor and dedication
+                            layer.bindPopup(img + '<h1>' + feature.properties.item + '</h1> <h2>Dedicated to '+feature.properties.dedi_id+'</h2><h2>Given by ' + feature.properties.donor_id+'</h2>' + feature.geometry.coordinates),
 				            layer.setIcon(objIcon)
                         }
-                    } else if(p.inscription != '') { // donor and inscription but no dedication
-                        layer.bindPopup(img + '<h1>' + feature.properties.item + '</h1> <h2>Given by ' + feature.properties.donor_id+'</h2>' /* + inscription??? */  + feature.geometry.coordinates),
+                    } else if(p.inscription != '') { // donor and inscription
+                        layer.bindPopup(img + '<h1>' + feature.properties.item + '</h1><h2>Given by ' + feature.properties.donor_id + '</h2><h3><em>Inscription:</em></h3>' + p.inscription + '<br />' + feature.geometry.coordinates),
                         layer.setIcon(objIcon)
+                    } else { // donor only
+                        layer.bindPopup(img + '<h1>' + feature.properties.item + '</h1><h2>Given by ' + feature.properties.donor_id+'</h2><br />' + feature.geometry.coordinates),
+				            layer.setIcon(objIcon)
                     }
-                } else if(p.dedi_id != '') { // dedication but no donor
-                    if(p.inscription != '') { // dedication & inscription
-                        layer.bindPopup(img + '<h1>' + feature.properties.item + '</h1> <h2>Dedicated to '+feature.properties.dedi_id+'</h2>' /* + inscription??? */  + feature.geometry.coordinates),
+                } else if(p.dedi_id != '') {
+                    if(p.inscription != '') { // dedication and inscription
+                        layer.bindPopup(img + '<h1>' + feature.properties.item + '</h1><h2>Dedicated to ' + feature.properties.dedi_id+'</h2><h3><em>Inscription:</em></h3>' + p.inscription + '<br />' + feature.geometry.coordinates),
                         layer.setIcon(objIcon)
                     } else { // dedication only
-                        layer.bindPopup(img + '<h1>' + feature.properties.item + '</h1> <h2>Dedicated to '+feature.properties.dedi_id+'</h2>' + feature.geometry.coordinates),
+                        layer.bindPopup(img + '<h1>' + feature.properties.item + '</h1> <h2>Dedicated to ' + feature.properties.dedi_id+'</h2>' + feature.geometry.coordinates),
                         layer.setIcon(objIcon)
                     }
                 } else if(p.inscription != '') { // inscription only
-                    layer.bindPopup(img + '<h1>' + feature.properties.item + '</h1>' /* + inscription??? */  + feature.geometry.coordinates),
+                    layer.bindPopup(img + '<h1>' + feature.properties.item + '</h1><h3><em>Inscription:</em></h3>' + p.inscription + '<br />' + feature.geometry.coordinates),
                     layer.setIcon(objIcon)
                 } else { // none of the above
-                    layer.bindPopup(img + '<h1>' + feature.properties.item + '</h1>'),
+                    layer.bindPopup(img + '<h1>' + feature.properties.item + '</h1>' + feature.geometry.coordinates),
                     layer.setIcon(objIcon)
                 }
 				
@@ -137,13 +140,45 @@
 },
 				onEachFeature: function(feature, layer) {
 					var q = layer.feature.properties;
-					q.index = q.item + " | " + q.donor_id + " | " + q.dedi_id + " | " + q.inscription;
+					//q.index = q.item + " | " + q.donor_id + " | " + q.dedi_id + " | " + q.inscription;
 					//only try to display image if there's an image source
 					if (q.img_src != ''){
 						var img = '<img class ="tooltip-img" src = "images/' + q.img_src + '" >'
 					} else img = '<img style="display:none">';
+                    
+                    /*if(q.donor_id != '') {
+                        if(q.dedi_id != '') {
+                            if(q.inscription != '') { // donor, dedication, and inscription
+                                layer.bindPopup(img + '<h1>' + feature.properties.item + '</h1><h2>Dedicated to ' + feature.properties.dedi_id + '</h2><h2>Given by ' + feature.properties.donor_id + '</h2>' + feature.geometry.coordinates),
+                                    layer.setIcon(treeIcon)
+                            } else { // donor and dedication
+                                layer.bindPopup(img + '<h1>' + feature.properties.item + '</h1><h2>Dedicated to ' + feature.properties.dedi_id + '</h2><h2>Given by ' + feature.properties.donor_id + '</h2>' + feature.geometry.coordinates),
+                                    layer.setIcon(treeIcon)
+                            }
+                        } else if(q.inscription != '') { // donor and inscription
+                            layer.bindPopup(img + '<h1>' + feature.properties.item + '</h1><h2>Given by ' + feature.properties.donor_id + '</h2>' + feature.geometry.coordinates),
+                                    layer.setIcon(treeIcon)
+                        } else { // donor only
+                            layer.bindPopup(img + '<h1>' + feature.properties.item + '</h1>Given by ' + feature.properties.donor_id + '</h2>') + feature.geometry.coordinates),
+                                layer.setIcon(treeIcon)
+                        }
+                    } else if(q.dedi_id != '') {
+                        if(q.inscription != '') { // dedication and inscription
+                            layer.bindPopup(img + '<h1>' + feature.properties.item + '</h1> <h2>Dedicated to '+feature.properties.dedi_id+'</h2>'  + feature.geometry.coordinates),
+                                layer.setIcon(treeIcon)
+                        } else {// dedication only
+                            layer.bindPopup(img + '<h1>' + feature.properties.item + '</h1> <h2>Dedicated to ' + feature.properties.dedi_id+'</h2>' + feature.geometry.coordinates),
+                        }
+                    } else if(q.inscription != '') { // inscription only
+                        layer.bindPopup(img + '<h1>' + feature.properties.item + '</h1>'  + feature.geometry.coordinates),
+                            layer.setIcon(treeIcon)
+                    } else { // none of the above
+                        layer.bindPopup(img + '<h1>' + feature.properties.item + '</h1>' + feature.geometry.coordinates),
+                            layer.setIcon(treeIcon)
+                    } */
+                        
 					layer.bindPopup(img + '<h1>' + feature.properties.item +  '</h1><h2>Dedicated to ' + feature.properties.dedi_id + '</h2><h2>Given by ' + feature.properties.donor_id + '</h2>'),
-								layer.setIcon(treeIcon)
+				    layer.setIcon(treeIcon)
 				}
 		}).addTo(mymap);
 
