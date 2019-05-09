@@ -43,11 +43,9 @@
 
 
 		var mymap = L.map('livingcampus').setView([40.027, -75.315], 16);
-		L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
-    	attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a><br/>Project contributors: Nisha Choudhary, Andrew Tharler, Alicia Peaker, Cara Navarro, and Lille van der Zanden',
-    	maxZoom: 20,
-    	id: 'mapbox.streets',
-    	accessToken: 'pk.eyJ1IjoiYXBlYWtlciIsImEiOiJjamxxdDBzYXoyam52M3B0NXJzazZ3b3Y2In0.0Pd_m3s30duVpgLPy4foqA'
+		L.tileLayer('https://api.mapbox.com/styles/v1/atharler/cjuczb3h417901fpoaqeudgi1/tiles/256/{z}/{x}/{y}@2x?access_token={accessToken}', {
+			attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery &copy; <a href="https://www.mapbox.com/">Mapbox</a><br/>Project contributors: Nisha Choudhary, Andrew Tharler, Alicia Peaker, Cara Navarro, and Lille van der Zanden',
+			maxZoom: 20, id: 'mapbox.outdoors', accessToken: 'pk.eyJ1IjoiYXRoYXJsZXIiLCJhIjoiY2owYnB6NWZtMDQzcTMybGMyb2x3M2o1eCJ9.agTn0-xD9d83OwSOiQsqLw'
 		}).addTo(mymap);
 
 		var objIcon = L.icon({
