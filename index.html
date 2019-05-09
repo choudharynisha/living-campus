@@ -58,7 +58,7 @@
 			});
 
 		var treeIcon = L.icon({
-				iconUrl: 'Tree C.png',
+				iconUrl: 'Tree A.png',
 				iconSize: [30, 30],
 				iconAnchor: [15, 15],
 				popupAnchor: [0, 0]
@@ -73,21 +73,6 @@
 			onEachFeature: function(feature, layer){
 				var p = layer.feature.properties;
                 p.index = p.item;
-                /*
-                // if there is a donor_id, add it; otherwise, don't
-                if(p.donor_id != '') {
-                    p.index += " | " + p.donor_id;
-                }
-                
-                // if there is a dedi_id, add it; otherwise, don't
-                if(p.dedi_id != '') {
-                    p.index += " | " + p.dedi_id;
-                }
-                
-                // if there is an inscription, add it; otherwise, don't
-                if(p.inscription != '') {
-                    " | " + p.inscription;
-                }*/
                 
 				//only try to display image if there's an image source
 				if (p.img_src != ''){
